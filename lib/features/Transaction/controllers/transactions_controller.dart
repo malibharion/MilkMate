@@ -92,11 +92,11 @@ class TransactionsController extends GetxController {
   }
 
   void onAddExpense() {
-    // Get.toNamed('/add-expense');
+    Get.toNamed('/add-expense');
   }
 
   void onAddPayment() {
-    // Get.toNamed('/add-payment');
+    Get.toNamed('/add-payment');
   }
 
   void onAddTransaction() {

@@ -1,17 +1,29 @@
-import 'package:dairy_farm_app/app/routes.dart';
+// lib/features/splash/controller/splash_controller.dart
+import 'package:dairy_farm_app/core/services/storage_services.dart';
 import 'package:get/get.dart';
+import '../../../app/routes.dart';
 
 class SplashController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    print("Debug: SplashController onInit called");
-    _navigateToLogin();
+    _navigate();
   }
 
-  void _navigateToLogin() async {
-    await Future.delayed(const Duration(seconds: 7));
+  Future<void> _navigate() async {
+    // Show splash for 2 seconds
+    await Future.delayed(const Duration(seconds: 2));
 
-    Get.offAllNamed(AppPages.login);
+    if (!StorageService.hasFarm) {
+      Get.offAllNamed(AppPages.farmscreen);
+      return;
+    }
+
+    if (!StorageService.isLoggedIn) {
+      Get.offAllNamed(AppPages.login);
+      return;
+    }
+
+    Get.offAllNamed(AppPages.bottomnavbar);
   }
 }

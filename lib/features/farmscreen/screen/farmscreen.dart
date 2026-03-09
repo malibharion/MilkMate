@@ -1,30 +1,23 @@
-import 'package:dairy_farm_app/app/routes.dart';
+// lib/features/farmscreen/screen/farmscreen.dart
 import 'package:dairy_farm_app/core/theme/color.dart';
 import 'package:dairy_farm_app/core/theme/text_styles.dart';
-import 'package:dairy_farm_app/features/farmscreen/widgets/farmscreen_widgets.dart';
+import 'package:dairy_farm_app/features/farmscreen/contrller/farmscreen_controller.dart';
 import 'package:dairy_farm_app/shared/widgets/custom_button.dart';
 import 'package:dairy_farm_app/shared/widgets/custom_textfeild.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class Farmscreen extends StatefulWidget {
+class Farmscreen extends GetView<FarmscreenController> {
   const Farmscreen({super.key});
-
-  @override
-  State<Farmscreen> createState() => _FarmscreenState();
-}
-
-class _FarmscreenState extends State<Farmscreen> {
-  final TextEditingController _farmController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     final h = MediaQuery.of(context).size.height;
     final w = MediaQuery.of(context).size.width;
-
     final isKeyboardOpen = MediaQuery.of(context).viewInsets.bottom > 0;
 
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       body: Container(
         width: double.infinity,
         height: double.infinity,
@@ -37,34 +30,48 @@ class _FarmscreenState extends State<Farmscreen> {
         ),
         child: SafeArea(
           child: SingleChildScrollView(
-            reverse: true,
+            // ✅ NO reverse:true — that was the cause of keyboard dismissal
             physics: const BouncingScrollPhysics(),
-            child: Padding(
-              padding: EdgeInsets.symmetric(
-                horizontal: w * 0.05,
-                vertical: h * 0.12,
-              ),
+            padding: EdgeInsets.symmetric(horizontal: w * 0.05),
+            child: ConstrainedBox(
+              constraints: BoxConstraints(minHeight: h * 0.85),
               child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  // Vertical spacing before logo
-                  if (!isKeyboardOpen) SizedBox(height: h * 0.08),
+                  SizedBox(height: h * 0.06),
 
-                  // MILKMATE logo
-                  if (!isKeyboardOpen)
-                    Text(
-                      'MILKMATE',
-                      style: TextStyle(
-                        fontSize: 42,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                        letterSpacing: 1.2,
+                  // ── Logo (hides smoothly when keyboard opens) ──
+                  AnimatedSwitcher(
+                    duration: const Duration(milliseconds: 300),
+                    transitionBuilder: (child, animation) => FadeTransition(
+                      opacity: animation,
+                      child: SizeTransition(
+                        sizeFactor: animation,
+                        axisAlignment: -1,
+                        child: child,
                       ),
                     ),
+                    child: isKeyboardOpen
+                        ? const SizedBox.shrink(key: ValueKey('hidden'))
+                        : Column(
+                            key: const ValueKey('shown'),
+                            children: [
+                              const Text(
+                                'MILKMATE',
+                                style: TextStyle(
+                                  fontSize: 42,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                  letterSpacing: 1.2,
+                                ),
+                              ),
+                              SizedBox(height: h * 0.06),
+                            ],
+                          ),
+                  ),
 
-                  if (!isKeyboardOpen) SizedBox(height: h * 0.08),
-
-                  // Card container
+                  // ── White card ──
                   Container(
                     width: double.infinity,
                     padding: EdgeInsets.all(w * 0.05),
@@ -92,52 +99,46 @@ class _FarmscreenState extends State<Farmscreen> {
                           style: AppTextStyles.subtitle1,
                         ),
                         SizedBox(height: h * 0.03),
+
                         Text('Farm Name', style: AppTextStyles.label),
                         SizedBox(height: h * 0.01),
-                        CustomTextField(
-                          hintText: 'Enter Farm Name',
-                          prefixIcon: Icon(
-                            Icons.home,
-                            color: AppColors.primary,
-                            size: w * 0.06,
+
+                        Obx(
+                          () => CustomTextField(
+                            hintText: 'Enter Farm Name',
+                            controller: controller.farmNameController,
+                            prefixIcon: Icon(
+                              Icons.home,
+                              color: AppColors.primary,
+                              size: w * 0.06,
+                            ),
+                            errorText: controller.farmError.value.isNotEmpty
+                                ? controller.farmError.value
+                                : null,
                           ),
-                          controller: _farmController,
                         ),
+
                         SizedBox(height: h * 0.03),
-                        CustomElevatedButton(
-                          onPressed: () {
-                            Get.toNamed(AppPages.login);
-                          },
-                          title: 'Continue',
-                          useGradient: true,
+
+                        Obx(
+                          () => CustomElevatedButton(
+                            onPressed: controller.isLoading.value
+                                ? null
+                                : controller.onContinue,
+                            title: controller.isLoading.value
+                                ? 'Searching...'
+                                : 'Continue',
+                            useGradient: true,
+                            isLoading: controller.isLoading.value,
+                          ),
                         ),
+
                         SizedBox(height: h * 0.02),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              'Don\'t have an account?',
-                              style: AppTextStyles.bodyText1,
-                            ),
-                            TextButton(
-                              onPressed: () {
-                                Get.toNamed(AppPages.signupScreen);
-                              },
-                              child: Text(
-                                'Sign Up',
-                                style: AppTextStyles.bodyText1.copyWith(
-                                  color: AppColors.primary,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
                       ],
                     ),
                   ),
 
-                  // Extra spacing at bottom if keyboard not open
-                  if (!isKeyboardOpen) SizedBox(height: h * 0.08),
+                  SizedBox(height: h * 0.06),
                 ],
               ),
             ),

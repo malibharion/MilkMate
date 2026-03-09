@@ -38,6 +38,8 @@ dependencies:
   syncfusion_flutter_charts: any
   shimmer_animation: any
   loading_animation_widget: any
+  supabase_flutter: any
+  get_storage: any
 
 dev_dependencies:
   flutter_test:

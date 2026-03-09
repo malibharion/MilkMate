@@ -159,21 +159,36 @@ class SummaryCard extends StatelessWidget {
           const SizedBox(height: 12),
           Text(title, style: AppTextStyles.caption),
           const SizedBox(height: 4),
+          // ── Value row ──
           Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Text(value, style: AppTextStyles.headline2),
-              const SizedBox(width: 6),
+              Expanded(
+                child: Text(
+                  value,
+                  style: AppTextStyles.headline2.copyWith(fontSize: 18),
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
+                ),
+              ),
+              const SizedBox(width: 2),
               Icon(
                 isDeltaPositive ? Icons.arrow_drop_up : Icons.arrow_drop_down,
                 color: isDeltaPositive ? AppColors.success : AppColors.error,
-                size: 16,
+                size: 14,
               ),
-              Text(
-                delta,
-                style: AppTextStyles.caption.copyWith(
-                  color: isDeltaPositive ? AppColors.success : AppColors.error,
-                  fontWeight: FontWeight.w600,
+              Flexible(
+                child: Text(
+                  delta,
+                  style: AppTextStyles.caption.copyWith(
+                    color: isDeltaPositive
+                        ? AppColors.success
+                        : AppColors.error,
+                    fontWeight: FontWeight.w600,
+                    fontSize: 10,
+                  ),
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
                 ),
               ),
             ],
