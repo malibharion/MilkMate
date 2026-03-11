@@ -9,6 +9,7 @@
 ![Flutter](https://img.shields.io/badge/Flutter-02569B?style=for-the-badge&logo=flutter&logoColor=white)
 ![Dart](https://img.shields.io/badge/Dart-0175C2?style=for-the-badge&logo=dart&logoColor=white)
 ![Supabase](https://img.shields.io/badge/Supabase-3ECF8E?style=for-the-badge&logo=supabase&logoColor=white)
+![GetX](https://img.shields.io/badge/GetX-8A2BE2?style=for-the-badge&logo=flutter&logoColor=white)
 
 </div>
 
@@ -44,7 +45,8 @@
 ```
 Flutter & Dart       →  Cross-platform mobile development (Android & iOS)
 Supabase             →  Backend, authentication & real-time database
-Clean Architecture   →  Scalable folder structure with separation of concerns
+GetX                 →  State management & dependency injection
+Clean Architecture   →  Feature-based modular folder structure
 Figma                →  UI/UX design & prototyping
 ```
 
@@ -61,7 +63,7 @@ Figma                →  UI/UX design & prototyping
 
 ```bash
 # Clone the repository
-git clone https://github.com/malibharion/MilkMate.git
+git clone https://github.com/malik-muhammad-dev/MilkMate.git
 cd MilkMate
 
 # Install dependencies
@@ -79,14 +81,35 @@ flutter run
 
 ```
 lib/
-├── core/              # Constants, theme, utilities
-├── data/              # Supabase data sources & repositories
-├── domain/            # Business logic & models
-└── presentation/      # UI screens & widgets
-    ├── dashboard/
-    ├── customers/
-    ├── milk/
-    └── transactions/
+├── app/                    # App initialization & routing
+├── core/                   # Constants, theme, services & utilities
+│   ├── constants/
+│   ├── services/
+│   ├── theme/
+│   └── utils/
+├── features/               # Feature modules (GetX pattern)
+│   ├── auth/
+│   ├── dashboard/
+│   ├── customers/
+│   ├── milk/
+│   ├── transaction/
+│   ├── profile/
+│   ├── farmscreen/
+│   ├── splash/
+│   └── bottom_navbar/
+└── shared/                 # Shared models & reusable widgets
+    ├── models/
+    └── widgets/
+```
+
+Each feature follows:
+```
+feature/
+├── binding/       # GetX dependency injection
+├── controller/    # Business logic
+├── model/         # Data models
+├── screen/        # UI screens
+└── widgets/       # Feature-specific widgets
 ```
 
 ---
@@ -95,9 +118,9 @@ lib/
 
 **Malik Muhammad** — Flutter Developer
 
-📧 malikmuhammad103@gmail.com  
-🔗 [LinkedIn](https://www.linkedin.com/in/malik-muhammad-b66178350/)  
-🐙 [GitHub](https://github.com/malibharion)
+📧 malikmuhammad103@gmail.com
+🔗 [LinkedIn](https://www.linkedin.com/in/malik-muhammad-b66178350/)
+🐙 [GitHub](https://github.com/malik-muhammad-dev)
 
 ---
 
